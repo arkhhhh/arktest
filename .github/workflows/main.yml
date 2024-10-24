@@ -25,7 +25,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Google Auth
-        id: autha
+        id: auth
         uses: 'google-github-actions/auth@v2'
         with:
           token_format: 'access_token'
