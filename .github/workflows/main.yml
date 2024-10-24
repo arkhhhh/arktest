@@ -9,7 +9,7 @@ env:
   IMAGE_NAME: 'test-image'
   GCP_PROJECT_ID: 'ak-main-439406'
   AR_REPO_LOCATION: 'asia-east1'
-  AR_URL: 'asia-east1-docker.pkg.dev/arktest/test-image'
+  AR_URL: 'asia-east1-docker.pkg.dev/ak-main-439406/akousist-registry'
   SERVICE_ACCOUNT: 'githubactions@ak-main-439406.iam.gserviceaccount.com' 
   WORKLOAD_IDENTITY_PROVIDER: 'projects/440618924758/locations/global/workloadIdentityPools/githubactions/providers/githubactions-prvdr'
 
