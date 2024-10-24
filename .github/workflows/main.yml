@@ -1,4 +1,4 @@
-name: Push to Artifact Registry
+name: Develop Packing & delivery
 
 on:
     push:
@@ -14,7 +14,7 @@ env:
   WORKLOAD_IDENTITY_PROVIDER: 'projects/440618924758/locations/global/workloadIdentityPools/githubactions/providers/githubactions-prvdr'
 
 jobs:
-  push_to_ar:
+  packing_and_push_to_ar:
     permissions:
       contents: 'read'
       id-token: 'write'
@@ -24,7 +24,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Google Auth
+      - name: OIDC with GCP and get access token
         id: auth
         uses: 'google-github-actions/auth@v2'
         with:
@@ -33,7 +33,7 @@ jobs:
           service_account: ${{ env.SERVICE_ACCOUNT }}
           workload_identity_provider: ${{ env.WORKLOAD_IDENTITY_PROVIDER }}
 
-      - name: Docker Auth
+      - name: Artifact Registry Login
         id: docker-auth
         uses: 'docker/login-action@v3'
         with:
