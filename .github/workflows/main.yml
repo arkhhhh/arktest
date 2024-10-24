@@ -3,6 +3,7 @@ name: Push to Artifact Registry
 on:
     push:
       branches: [ "main" ]
+    workflow_dispatch:
 
 env:
   IMAGE_NAME: 'test-image'
