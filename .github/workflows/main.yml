@@ -72,7 +72,7 @@ jobs:
       - name: Successed Notify
         id: notify_successed
         uses: slackapi/slack-github-action@v2.0.0
-        if: env.BUILD_STATUS == '0'
+        if: env.BUILD_STATUS == 0
         with:
           payload: '{"text": "Build successed for <${{ env.IMAGE_NAME }}> with tag < ${{ env.BUILD_TAG }}> on branch <${{ github.ref }}> and commit <${{ github.sha }}>."}'
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
@@ -81,7 +81,7 @@ jobs:
       - name: Successed Notify
         id: notify_failed
         uses: slackapi/slack-github-action@v2.0.0
-        if: env.BUILD_STATUS != '0'
+        if: env.BUILD_STATUS != 0
         with:
           payload: '{"text": "Build failed for <${{ env.IMAGE_NAME }}> on branch <${{ github.ref }}> and commit <${{ github.sha }}>, Details: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }} ."}'
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
