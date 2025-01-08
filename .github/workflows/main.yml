@@ -52,11 +52,11 @@ jobs:
       - name: Do somthing
         run: |-
           echo "There something running here..."
+          exit 1
 
       - name: Capture build status
         id: capture_status
         run: |-
-          echo "$?"
           echo "build_status=$?" >> $GITHUB_OUTPUT 
 
   Notify:
