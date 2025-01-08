@@ -20,20 +20,21 @@ jobs:
       id-token: 'write'
 
     runs-on: ubuntu-latest
+    outputs:
+      output1: ${{ steps.setenv.outputs.build_tag }}
     steps:
-      - name: Initiating dev env variables
-        if: github.ref == 'refs/heads/dev'
+      - name: Initiating env variables'
+        id: setenv
         run: |-
-          echo "BUILD_TAG=${{ github.run_number }}"
-          echo "build_tag=${{ github.run_number }}" >> $GITHUB_ENV
-          
-      - name: Initiating release env variables
-        if: github.ref == 'refs/heads/release'
-        run: |-
-          TAG=$(echo $GITHUB_SHA | cut -c1-7)
-          TAG="rc-$TAG"
-          echo "BUILD_TAG=$TAG"
-          echo "build_tag=$TAG" >> $GITHUB_ENV
+          if [ "${{ github.ref }}" == "refs/heads/dev" ]; then
+            echo "BUILD_TAG=${{ github.run_number }}"
+            echo "build_tag=${{ github.run_number }}" >> $GITHUB_OUTPUT
+          elif [ "${{ github.ref }}" == "refs/heads/release" ]; then
+            TAG=$(echo $GITHUB_SHA | cut -c1-7)
+            TAG="rc-$TAG"
+            echo "BUILD_TAG=$TAG"
+            echo "build_tag=$TAG" >>$GITHUB_OUTPUT
+          fi
 
   Build:
     needs: Initiating
@@ -42,6 +43,8 @@ jobs:
       id-token: 'write'
 
     runs-on: ubuntu-latest
+    outputs:
+      output1: ${{ steps.capture_status.outputs.build_status }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -59,22 +62,24 @@ jobs:
     permissions:
       contents: 'read'
       id-token: 'write'
-
+    env:
+      BUILD_TAG: ${{ needs.Initiating.outputs.build_tag }}
+      BUILD_STATUS: ${{ needs.Build.outputs.build_status }}
     runs-on: ubuntu-latest
     steps:
       - name: Successed Notify
         id: notify_successed
         uses: slackapi/slack-github-action@v2.0.0
-        if: env.build_status == '0'
+        if: env.BUILD_STATUS == '0'
         with:
-          payload: '{"text": "Build successed for <${{ env.IMAGE_NAME }}> with tag < ${{ env.build_tag }}> on branch <${{ github.ref }}> and commit <${{ github.sha }}>."}'
+          payload: '{"text": "Build successed for <${{ env.IMAGE_NAME }}> with tag < ${{ env.BUILD_TAG }}> on branch <${{ github.ref }}> and commit <${{ github.sha }}>."}'
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           webhook-type: incoming-webhook
 
       - name: Successed Notify
         id: notify_failed
         uses: slackapi/slack-github-action@v2.0.0
-        if: env.build_status != '0'
+        if: env.BUILD_STATUS != '0'
         with:
           payload: '{"text": "Build failed for <${{ env.IMAGE_NAME }}> on branch <${{ github.ref }}> and commit <${{ github.sha }}>, Details: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }} ."}'
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
