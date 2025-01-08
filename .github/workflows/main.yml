@@ -1,20 +1,42 @@
-name: Develop Packing & delivery
+name: arktest
 
 on:
     push:
-      branches: [ "main" ]
+      branches: [ "dev", "release", "main" ]
     workflow_dispatch:
 
 env:
-  IMAGE_NAME: 'test-image'
-  GCP_PROJECT_ID: 'ak-main-439406'
+  IMAGE_NAME: 'arktest-image'
+  GCP_PROJECT_ID: 'ak-central-matrix'
   AR_REPO_LOCATION: 'asia-east1'
-  AR_URL: 'asia-east1-docker.pkg.dev/ak-main-439406/akousist-registry'
-  SERVICE_ACCOUNT: 'githubactions@ak-main-439406.iam.gserviceaccount.com' 
-  WORKLOAD_IDENTITY_PROVIDER: 'projects/440618924758/locations/global/workloadIdentityPools/githubactions/providers/githubactions-prvdr'
+  AR_URL: 'asia-east1-docker.pkg.dev/ak-central-matrix/akousist-registry'
+  SERVICE_ACCOUNT: 'githubactions@ak-central-matrix.iam.gserviceaccount.com' 
+  WORKLOAD_IDENTITY_PROVIDER: 'projects/198927898038/locations/global/workloadIdentityPools/githubactions/providers/githubactions-prvdr'
 
 jobs:
-  packing_and_push_to_ar:
+  Initiating:
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Initiating dev env variables
+        if: github.ref == 'refs/heads/develop'
+        run: |-
+          echo "BUILD_TAG=${{ github.run_number }}"
+          echo "build_tag=${{ github.run_number }}" >> $GITHUB_ENV
+          
+      - name: Initiating release env variables
+        if: github.ref == 'refs/heads/release'
+        run: |-
+          TAG=$(echo $GITHUB_SHA | cut -c1-7)
+          TAG="rc-$TAG"
+          echo "BUILD_TAG=$TAG"
+          echo "build_tag=$TAG" >> $GITHUB_ENV
+
+  Build:
+    needs: Initiating
     permissions:
       contents: 'read'
       id-token: 'write'
@@ -24,24 +46,75 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: OIDC with GCP and Get Access Token
-        id: auth
-        uses: 'google-github-actions/auth@v2'
-        with:
-          token_format: 'access_token'
-          project_id: ${{ env.GCP_PROJECT_ID }}
-          service_account: ${{ env.SERVICE_ACCOUNT }}
-          workload_identity_provider: ${{ env.WORKLOAD_IDENTITY_PROVIDER }}
-
-      - name: Artifact Registry Login
-        id: docker-auth
-        uses: 'docker/login-action@v3'
-        with:
-          username: 'oauth2accesstoken'
-          password: '${{ steps.auth.outputs.access_token }}'
-          registry: '${{ env.AR_REPO_LOCATION }}-docker.pkg.dev'
-
-      - name: Build and Push Container
+      - name: Do somthing
         run: |-
-          docker build -t "${{ env.AR_URL }}/${{ env.IMAGE_NAME }}:${{ github.run_number }}" ./
-          docker push "${{ env.AR_URL }}/${{ env.IMAGE_NAME }}:${{ github.run_number }}"
+          echo "There something running here..."
+
+      - name: Capture build status
+        id: capture_status
+        run: echo "build_status=$?" >> $GITHUB_ENV 
+
+  Notify:
+    needs: Build
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Successed Notify
+        id: notify_successed
+        uses: slackapi/slack-github-action@v2.0.0
+        if: env.build_status == '0'
+        with:
+          payload: '{"text": "Build successed for <${{ env.IMAGE_NAME }}> with tag < ${{ env.build_tag }}> on branch <${{ github.ref }}> and commit <${{ github.sha }}>."}'
+          webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Successed Notify
+        id: notify_failed
+        uses: slackapi/slack-github-action@v2.0.0
+        if: env.build_status != '0'
+        with:
+          payload: '{"text": "Build failed for <${{ env.IMAGE_NAME }}> on branch <${{ github.ref }}> and commit <${{ github.sha }}>, Details: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }} ."}'
+          webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      # - name: Check
+      #   run: |
+      #     if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+      #       echo "Checking out tag from manual trigger: ${{ github.event.inputs.tag }}"
+      #       git fetch --tags
+      #       git checkout ${{ github.event.inputs.tag }}
+      #       git rev-parse HEAD 
+      #     elif [ "${{ github.event_name }}" == "push" ]; then
+      #       echo "Checking out tag from push event: ${{ github.ref }}"
+      #       git checkout ${{ github.ref }}
+      #       git rev-parse HEAD 
+      #     fi
+
+    #   - name: Checkout
+    #     uses: actions/checkout@v4
+        
+      # - name: OIDC with GCP and Get Access Token
+      #   id: auth
+      #   uses: 'google-github-actions/auth@v2'
+      #   with:
+      #     token_format: 'access_token'
+      #     project_id: ${{ env.GCP_PROJECT_ID }}
+      #     service_account: ${{ env.SERVICE_ACCOUNT }}
+      #     workload_identity_provider: ${{ env.WORKLOAD_IDENTITY_PROVIDER }}
+
+      # - name: Artifact Registry Login
+      #   id: docker-auth
+      #   uses: 'docker/login-action@v3'
+      #   with:
+      #     username: 'oauth2accesstoken'
+      #     password: '${{ steps.auth.outputs.access_token }}'
+      #     registry: '${{ env.AR_REPO_LOCATION }}-docker.pkg.dev'
+
+      # - name: Build and Push Container
+      #   run: |-
+      #     cd ai-training-chat
+      #     docker build -t "${{ env.AR_URL }}/${{ env.IMAGE_NAME }}:${{ github.run_number }}" ./
+      #     docker tag "${{ env.AR_URL }}/${{ env.IMAGE_NAME }}:${{ github.run_number }}" "${{ env.AR_URL }}/${{ env.IMAGE_NAME }}:latest"
+      #     docker push "${{ env.AR_URL }}/${{ env.IMAGE_NAME }}:${{ github.run_number }}"
+      #     docker push "${{ env.AR_URL }}/${{ env.IMAGE_NAME }}:latest"
