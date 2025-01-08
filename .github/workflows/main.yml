@@ -51,13 +51,13 @@ jobs:
 
       - name: Do somthing
         continue-on-error: true
-        run: |-
+        run: |
           echo "There something running here..."
           exit 1
 
       - name: Capture build status
         id: capture_status
-        run: |-
+        run: |
           echo $?
 #echo "build_status=$?" 
           
