@@ -50,6 +50,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Do somthing
+        continue-on-error: true
         run: |-
           echo "There something running here..."
           exit 1
