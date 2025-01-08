@@ -55,7 +55,7 @@ jobs:
 
       - name: Capture build status
         id: capture_status
-        run: 
+        run: |-
           echo "$?"
           echo "build_status=$?" >> $GITHUB_OUTPUT 
 
