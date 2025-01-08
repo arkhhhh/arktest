@@ -56,7 +56,7 @@ jobs:
       - name: Capture build status
         id: capture_status
         run: 
-          echo $?
+          echo "$?"
           echo "build_status=$?" >> $GITHUB_OUTPUT 
 
   Notify:
