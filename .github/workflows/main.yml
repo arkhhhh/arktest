@@ -69,6 +69,7 @@ jobs:
         with:
           payload: '{"text": "Build successed for <${{ env.IMAGE_NAME }}> with tag < ${{ env.build_tag }}> on branch <${{ github.ref }}> and commit <${{ github.sha }}>."}'
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
 
       - name: Successed Notify
         id: notify_failed
@@ -77,6 +78,7 @@ jobs:
         with:
           payload: '{"text": "Build failed for <${{ env.IMAGE_NAME }}> on branch <${{ github.ref }}> and commit <${{ github.sha }}>, Details: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }} ."}'
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
 
       # - name: Check
       #   run: |
