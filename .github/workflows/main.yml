@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Initiating dev env variables
-        if: github.ref == 'refs/heads/develop'
+        if: github.ref == 'refs/heads/dev'
         run: |-
           echo "BUILD_TAG=${{ github.run_number }}"
           echo "build_tag=${{ github.run_number }}" >> $GITHUB_ENV
