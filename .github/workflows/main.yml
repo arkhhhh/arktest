@@ -84,7 +84,7 @@ jobs:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           webhook-type: incoming-webhook
 
-      - name: Successed Notify
+      - name: Failed Notify
         id: notify_failed
         uses: slackapi/slack-github-action@v2.0.0
         if: env.BUILD_STATUS != 0
