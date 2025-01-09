@@ -90,16 +90,24 @@ jobs:
               - type: "section"
                 text:
                   type: "mrkdwn"
-                  text: '{"text": "Build successed for <${{ env.IMAGE_NAME }}> with tag < ${{ env.BUILD_TAG }}> on branch <${{ github.ref }}> and commit <${{ github.sha }}>."}'
+                  text: '*Finish and ready for Deploy* 🧞‍♂️'
               - type: "section"
                 fields: [
                   {
                     "type": "mrkdwn",
-                    "text": "*🎯Repository:*\n'abc'"
+                    "text": "🎯*Repo*\n${{ env.IMAGE_NAME }}"
                   },
                   {
                     "type": "mrkdwn",
-                    "text": "*🪴Branch:*\n'def'"
+                    "text": "🪴*Branch:*\n${{ github.ref }}"
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": "👾*Revision:*\n${{ github.sha }}"
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": "🔖*Tag:*\n${{ env.BUILD_TAG }}"
                   }
                 ]
           
