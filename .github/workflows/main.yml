@@ -90,7 +90,7 @@ jobs:
               - type: "section"
                 text:
                   type: "mrkdwn"
-                  text: '*Finish and ready for Deploy* 🧞‍♂️'
+                  text: '✅ *Finish and ready for Deploy*'
               - type: "section"
                 fields: [
                   {
@@ -100,7 +100,11 @@ jobs:
                   {
                     "type": "mrkdwn",
                     "text": "🔖*Tag:*\n${{ env.BUILD_TAG }}"
-                  },
+                  }
+                ]
+              - type: "divider"
+              - type: "section"
+                fields: [
                   {
                     "type": "mrkdwn",
                     "text": "🪴*Branch:*\n${{ github.ref }}"
