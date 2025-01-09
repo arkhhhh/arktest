@@ -51,6 +51,7 @@ jobs:
 
       - name: Do somthing
         continue-on-error: true
+        id: building
         run: |
           echo "There something running here..."
           exit 1
@@ -58,10 +59,11 @@ jobs:
       - name: Capture build status
         id: capture_status
         run: |
-          echo $?
-#echo "build_status=$?" 
-          
-# >> $GITHUB_OUTPUT 
+          if [ "${{ steps.building.outcome }}" == "success" ]; then
+            echo "build_status=0" >> $GITHUB_OUTPUT
+          else
+            echo "build_status=1" >> $GITHUB_OUTPUT
+          fi
 
   Notify:
     needs: Build
