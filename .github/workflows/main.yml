@@ -85,7 +85,7 @@ jobs:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           webhook-type: incoming-webhook
           payload: |
-            text: 'Upgrade Ready 📣'
+            text: '${{ env.IMAGE_NAME }} Upgrade Ready 📣'
             blocks:
               - type: "section"
                 text:
