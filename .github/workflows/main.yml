@@ -95,19 +95,19 @@ jobs:
                 fields: [
                   {
                     "type": "mrkdwn",
-                    "text": "🎯*Repo*\n  ${{ env.IMAGE_NAME }}"
+                    "text": "🎯*Repo*\n${{ env.IMAGE_NAME }}"
                   },
                   {
                     "type": "mrkdwn",
-                    "text": "🪴*Branch:*\n  ${{ github.ref }}"
+                    "text": "🪴*Branch:*\n${{ github.ref }}"
                   },
                   {
                     "type": "mrkdwn",
-                    "text": "👾*Revision:*\n  ${{ github.sha }}"
+                    "text": "🔖*Tag:*\n${{ env.BUILD_TAG }}"
                   },
                   {
                     "type": "mrkdwn",
-                    "text": "🔖*Tag:*\n  ${{ env.BUILD_TAG }}"
+                    "text": "👾*Revision:*\n${{ github.sha }}"
                   }
                 ]
           
