@@ -54,7 +54,7 @@ jobs:
         id: building
         run: |
           echo "There something running here..."
-          exit 0
+          exit 1
 
       - name: Capture build status
         id: capture_status
@@ -121,6 +121,13 @@ jobs:
         uses: slackapi/slack-github-action@v2.0.0
         if: env.BUILD_STATUS != 0
         with:
-          payload: '{"text": "Build failed for <${{ env.IMAGE_NAME }}> on branch <${{ github.ref }}> and commit <${{ github.sha }}>, Details: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }} ."}'
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           webhook-type: incoming-webhook
+          payload: |
+            text: '🛑 GG 👉${{ env.IMAGE_NAME }}👈'
+            blocks:
+              - type: "section"
+                text:
+                  type: "mrkdwn"
+                  text: '🛑 *${{ env.IMAGE_NAME }} build failed*'
+          
