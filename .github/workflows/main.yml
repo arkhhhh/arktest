@@ -91,6 +91,17 @@ jobs:
                 text:
                   type: "mrkdwn"
                   text: '{"text": "Build successed for <${{ env.IMAGE_NAME }}> with tag < ${{ env.BUILD_TAG }}> on branch <${{ github.ref }}> and commit <${{ github.sha }}>."}'
+              - type: "section"
+                fields: [
+                  {
+                    "type": "mrkdwn",
+                    "text": "*🎯Repository:*\n'abc'"
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": "*🪴Branch:*\n'def'"
+                  }
+                ]
           
 
       - name: Failed Notify
