@@ -99,11 +99,11 @@ jobs:
                   },
                   {
                     "type": "mrkdwn",
-                    "text": "🪴*Branch:*\n${{ github.ref }}"
+                    "text": "🔖*Tag:*\n${{ env.BUILD_TAG }}"
                   },
                   {
                     "type": "mrkdwn",
-                    "text": "🔖*Tag:*\n${{ env.BUILD_TAG }}"
+                    "text": "🪴*Branch:*\n${{ github.ref }}"
                   },
                   {
                     "type": "mrkdwn",
