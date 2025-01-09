@@ -85,7 +85,7 @@ jobs:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           webhook-type: incoming-webhook
           payload: |
-            text: 'Upgrade Ready '
+            text: "{"text": "Build successed for <${{ env.IMAGE_NAME }}> with tag < ${{ env.BUILD_TAG }}> on branch <${{ github.ref }}> and commit <${{ github.sha }}>."}"
             blocks:
               - type: "section"
                 text:
