@@ -21,7 +21,7 @@ jobs:
 
     runs-on: ubuntu-latest
     outputs:
-      output1: ${{ steps.setenv.outputs.build_tag }}
+      build_tag: ${{ steps.setenv.outputs.build_tag }}
     steps:
       - name: Initiating env variables'
         id: setenv
@@ -44,7 +44,7 @@ jobs:
 
     runs-on: ubuntu-latest
     outputs:
-      output1: ${{ steps.capture_status.outputs.build_status }}
+      build_status: ${{ steps.capture_status.outputs.build_status }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -68,7 +68,7 @@ jobs:
           fi
 
   Notify:
-    needs: Build
+    needs: [Initiating, Build]
     permissions:
       contents: 'read'
       id-token: 'write'
