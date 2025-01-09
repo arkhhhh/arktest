@@ -129,5 +129,5 @@ jobs:
               - type: "section"
                 text:
                   type: "mrkdwn"
-                  text: '🛑 *${{ env.IMAGE_NAME }} build failed*'
+                  text: '🛑 *${{ env.IMAGE_NAME }}* build failed!\nDetails: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}'
           
