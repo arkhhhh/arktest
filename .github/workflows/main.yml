@@ -54,7 +54,6 @@ jobs:
         id: building
         run: |
           echo "There something running here..."
-          exit 1
 
       - name: Capture build status
         id: capture_status
