@@ -64,6 +64,24 @@ jobs:
             echo "build_status=1" >> $GITHUB_OUTPUT
           fi
 
+  Depoy:
+    needs: Build
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Kustomize
+        if: env.BUILD_STATUS == 0
+        run: |
+          if [ "${{ steps.building.outcome }}" == "success" ]; then
+            echo "build_status=0"  
+            echo "build_status=0" >> $GITHUB_OUTPUT
+          else
+            echo "build_status=1"
+            echo "build_status=1" >> $GITHUB_OUTPUT
+          fi
+
   # Notify:
   #   needs: [Initiating, Build]
   #   permissions:
