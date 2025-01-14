@@ -26,22 +26,20 @@ jobs:
       - name: Initiating env variables'
         id: setenv
         run: |-
+          TAG=$(echo $GITHUB_SHA | cut -c1-7)
           if [ "${{ github.ref }}" == "refs/heads/dev" ]; then
-            echo "BUILD_TAG=${{ github.run_number }}"
-            echo "build_tag=${{ github.run_number }}" >> $GITHUB_OUTPUT
+            TAG="dev-$TAG"
           elif [ "${{ github.ref }}" == "refs/heads/release" ]; then
-            TAG=$(echo $GITHUB_SHA | cut -c1-7)
             TAG="rc-$TAG"
-            echo "BUILD_TAG=$TAG"
-            echo "build_tag=$TAG" >>$GITHUB_OUTPUT
           fi
+          echo "BUILD_TAG=$TAG"
+          echo "build_tag=$TAG" >>$GITHUB_OUTPUT
 
   Build:
     needs: Initiating
     permissions:
       contents: 'read'
       id-token: 'write'
-
     runs-on: ubuntu-latest
     outputs:
       build_status: ${{ steps.capture_status.outputs.build_status }}
