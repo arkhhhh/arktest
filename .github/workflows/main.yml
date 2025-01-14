@@ -64,72 +64,72 @@ jobs:
             echo "build_status=1" >> $GITHUB_OUTPUT
           fi
 
-  Notify:
-    needs: [Initiating, Build]
-    permissions:
-      contents: 'read'
-      id-token: 'write'
-    env:
-      BUILD_TAG: ${{ needs.Initiating.outputs.build_tag }}
-      BUILD_STATUS: ${{ needs.Build.outputs.build_status }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Successed Notify
-        id: notify_successed
-        uses: slackapi/slack-github-action@v2.0.0
-        if: env.BUILD_STATUS == 0
-        with:
-          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
-          webhook-type: incoming-webhook
-          payload: |
-            text: '📣 SHOUT OUT 👉${{ env.IMAGE_NAME }}👈'
-            blocks:
-              - type: "section"
-                text:
-                  type: "mrkdwn"
-                  text: '✅ *Finish and ready for Deploy*'
-              - type: "section"
-                fields: [
-                  {
-                    "type": "mrkdwn",
-                    "text": "🎯*Repo*\n*${{ env.IMAGE_NAME }}*"
-                  },
-                  {
-                    "type": "mrkdwn",
-                    "text": "🔖*Tag:*\n*${{ env.BUILD_TAG }}*"
-                  }
-                ]
-              - type: "divider"
-              - type: "section"
-                fields: [
-                  {
-                    "type": "mrkdwn",
-                    "text": "🪴*Branch:*\n*${{ github.ref }}*"
-                  },
-                  {
-                    "type": "mrkdwn",
-                    "text": "👾*Revision:*\n*${{ github.sha }}*"
-                  }
-                ]
+  # Notify:
+  #   needs: [Initiating, Build]
+  #   permissions:
+  #     contents: 'read'
+  #     id-token: 'write'
+  #   env:
+  #     BUILD_TAG: ${{ needs.Initiating.outputs.build_tag }}
+  #     BUILD_STATUS: ${{ needs.Build.outputs.build_status }}
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Successed Notify
+  #       id: notify_successed
+  #       uses: slackapi/slack-github-action@v2.0.0
+  #       if: env.BUILD_STATUS == 0
+  #       with:
+  #         webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+  #         webhook-type: incoming-webhook
+  #         payload: |
+  #           text: '📣 SHOUT OUT 👉${{ env.IMAGE_NAME }}👈'
+  #           blocks:
+  #             - type: "section"
+  #               text:
+  #                 type: "mrkdwn"
+  #                 text: '✅ *Finish and ready for Deploy*'
+  #             - type: "section"
+  #               fields: [
+  #                 {
+  #                   "type": "mrkdwn",
+  #                   "text": "🎯*Repo*\n*${{ env.IMAGE_NAME }}*"
+  #                 },
+  #                 {
+  #                   "type": "mrkdwn",
+  #                   "text": "🔖*Tag:*\n*${{ env.BUILD_TAG }}*"
+  #                 }
+  #               ]
+  #             - type: "divider"
+  #             - type: "section"
+  #               fields: [
+  #                 {
+  #                   "type": "mrkdwn",
+  #                   "text": "🪴*Branch:*\n*${{ github.ref }}*"
+  #                 },
+  #                 {
+  #                   "type": "mrkdwn",
+  #                   "text": "👾*Revision:*\n*${{ github.sha }}*"
+  #                 }
+  #               ]
           
 
-      - name: Failed Notify
-        id: notify_failed
-        uses: slackapi/slack-github-action@v2.0.0
-        if: env.BUILD_STATUS != 0
-        with:
-          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
-          webhook-type: incoming-webhook
-          payload: |
-            text: '🛑 GG 👉${{ env.IMAGE_NAME }}👈'
-            blocks:
-              - type: "section"
-                text:
-                  type: "mrkdwn"
-                  text: '🛑 *${{ env.IMAGE_NAME }}* build failed!'                  
-              - type: "section"
-                text:
-                  type: "mrkdwn"
-                  text: 'Details: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}'
+  #     - name: Failed Notify
+  #       id: notify_failed
+  #       uses: slackapi/slack-github-action@v2.0.0
+  #       if: env.BUILD_STATUS != 0
+  #       with:
+  #         webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+  #         webhook-type: incoming-webhook
+  #         payload: |
+  #           text: '🛑 GG 👉${{ env.IMAGE_NAME }}👈'
+  #           blocks:
+  #             - type: "section"
+  #               text:
+  #                 type: "mrkdwn"
+  #                 text: '🛑 *${{ env.IMAGE_NAME }}* build failed!'                  
+  #             - type: "section"
+  #               text:
+  #                 type: "mrkdwn"
+  #                 text: 'Details: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}'
                   
           
