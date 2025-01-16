@@ -73,7 +73,6 @@ jobs:
       BUILD_TAG: ${{ needs.Initiating.outputs.build_tag }}
       BUILD_STATUS: ${{ needs.Build.outputs.build_status }}
       GITHUB_TOKEN: ${{ secrets.KUSTOMIZE_REPO_TOKEN }}
-      BRANCH: $GITHUB_REF
     runs-on: ubuntu-latest
     steps:
       - name: Trigger Kustomize
@@ -83,7 +82,7 @@ jobs:
             -H "Authorization: token $GITHUB_TOKEN" \
             -H "Accept: application/vnd.github.v3+json" \
             https://api.github.com/repos/akousist/Ak-Deploy-Kustomize/dispatches \
-            -d '{"event_type": "gke-deploy", "client_payload": {"image_name": "${{ env.IMAGE_NAME }}", "tag": "${{ env.BUILD_TAG }}", "branch": ${{ env.BRANCH }} }}'
+            -d '{"event_type": "gke-deploy", "client_payload": {"image_name": "${{ env.IMAGE_NAME }}", "tag": "${{ env.BUILD_TAG }}", "branch": ${{ github.ref#refs/heads/ }} }}'
 
   # Notify:
   #   needs: [Initiating, Build]
