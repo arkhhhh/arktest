@@ -78,11 +78,12 @@ jobs:
       - name: Trigger Kustomize
         if: env.BUILD_STATUS == 0
         run: |
+          echo $GITHUB_REF
           curl -X POST \
             -H "Authorization: token $GITHUB_TOKEN" \
             -H "Accept: application/vnd.github.v3+json" \
             https://api.github.com/repos/akousist/Ak-Deploy-Kustomize/dispatches \
-            -d '{"event_type": "gke-deploy", "client_payload": {"image_name": "${{ env.IMAGE_NAME }}", "tag": "${{ env.BUILD_TAG }}", "branch": "${{ github.ref#refs/heads/ }}" }}'
+            -d '{"event_type": "gke-deploy", "client_payload": {"image_name": "${{ env.IMAGE_NAME }}", "tag": "${{ env.BUILD_TAG }}", "branch": "abc}" }}'
 
   # Notify:
   #   needs: [Initiating, Build]
