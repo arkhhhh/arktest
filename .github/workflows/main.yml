@@ -73,7 +73,7 @@ jobs:
       BUILD_TAG: ${{ needs.Initiating.outputs.build_tag }}
       BUILD_STATUS: ${{ needs.Build.outputs.build_status }}
       GITHUB_TOKEN: ${{ secrets.KUSTOMIZE_REPO_TOKEN }}
-      BRANCH: ${GITHUB_REF#refs/heads/}
+      BRANCH: $GITHUB_REF
     runs-on: ubuntu-latest
     steps:
       - name: Trigger Kustomize
