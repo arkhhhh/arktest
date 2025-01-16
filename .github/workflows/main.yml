@@ -82,7 +82,7 @@ jobs:
             -H "Authorization: token $GITHUB_TOKEN" \
             -H "Accept: application/vnd.github.v3+json" \
             https://api.github.com/repos/akousist/Ak-Deploy-Kustomize/dispatches \
-            -d '{"event_type": "gke-deploy", "client_payload": {"image_name": "${{ env.IMAGE_NAME }}", "tag": "${{ env.BUILD_TAG }}", "branch": "$GITHUB_REF#/refs/heads/" }}'
+            -d '{"event_type": "gke-deploy", "client_payload": {"image_name": "${{ env.IMAGE_NAME }}", "tag": "${{ env.BUILD_TAG }}", "branch": ${GITHUB_REF#/refs/heads/} }}'
 
   # Notify:
   #   needs: [Initiating, Build]
