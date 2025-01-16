@@ -107,7 +107,7 @@ jobs:
   #             - type: "section"
   #               text:
   #                 type: "mrkdwn"
-  #                 text: '✅ *Finish and ready for Deploy*'
+  #                 text: '✅ *Finish and ready for Deploy, soon be done*'
   #             - type: "section"
   #               fields: [
   #                 {
