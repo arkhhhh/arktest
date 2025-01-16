@@ -78,9 +78,7 @@ jobs:
       - name: Trigger Kustomize
         if: env.BUILD_STATUS == 0
         run: |
-          echo ${{ github.ref }}
-          echo ${GITHUB_REF}
-          echo $GITHUB_REF
+          echo ${{ github.ref.name }}
           curl -X POST \
             -H "Authorization: token $GITHUB_TOKEN" \
             -H "Accept: application/vnd.github.v3+json" \
