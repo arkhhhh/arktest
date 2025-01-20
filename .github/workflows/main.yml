@@ -75,19 +75,15 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.KUSTOMIZE_REPO_TOKEN }}
     runs-on: ubuntu-latest
     steps:
-      - name: kustomize
+      - name: Trigger Kustomize
+        if: env.BUILD_STATUS == 0
         run: |
-          kustomize edit 
-          
-
-      # - name: Trigger Kustomize
-      #   if: env.BUILD_STATUS == 0
-      #   run: |
-      #     curl -X POST \
-      #       -H "Authorization: token $GITHUB_TOKEN" \
-      #       -H "Accept: application/vnd.github.v3+json" \
-      #       https://api.github.com/repos/akousist/Ak-Deploy-Kustomize/dispatches \
-      #       -d '{"event_type": "gke-deploy", "client_payload": {"image_name": "${{ env.IMAGE_NAME }}", "tag": "${{ env.BUILD_TAG }}", "branch": "${{ github.ref_name }}" }}'
+          echo ${{ github.ref_name }}
+          curl -X POST \
+            -H "Authorization: token $GITHUB_TOKEN" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/akousist/Ak-Deploy-Kustomize/dispatches \
+            -d '{"event_type": "gke-deploy", "client_payload": {"image_name": "${{ env.IMAGE_NAME }}", "tag": "${{ env.BUILD_TAG }}", "branch": "${{ github.ref_name }}" }}'
 
 
   # Notify:
