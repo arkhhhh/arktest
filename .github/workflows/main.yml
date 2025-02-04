@@ -18,7 +18,6 @@ jobs:
     permissions:
       contents: 'read'
       id-token: 'write'
-
     runs-on: ubuntu-latest
     outputs:
       build_tag: ${{ steps.setenv.outputs.build_tag }}

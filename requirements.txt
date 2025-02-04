@@ -1,0 +1,4 @@
+kubernetes
+google-auth
+google-auth-oauthlib
+
